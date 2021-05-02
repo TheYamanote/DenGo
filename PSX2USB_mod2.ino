@@ -20,10 +20,6 @@
  * PlayStation 1 controller pin 5 (VCC) --> Arduino Leonardo port 3.3V
  * PlayStation 1 controller pin 6 (ATT) --> Arduino Leonardo digital port 11
  * PlayStation 1 controller pin 7 (CLK) --> Arduino Leonardo digital port 10
- * 
- * Arduino Leonardo digital port 12 is for the optional pedal.
- * Connect the port to a wire which offers 5V if the pedal is not pressed, 0V otherwise.
- * Connect the pin to 5V if no pedal is used.
  *
  */
 
@@ -34,7 +30,6 @@
 #define cmndPin 9
 #define attPin 11
 #define clockPin 10
-#define pedalPin 12
 
 #define ANALOG_MIN_VALUE 0U
 #define ANALOG_MAX_VALUE 255U
@@ -121,12 +116,7 @@ void loop () {
 
     usbStick.setButton (0, data & psxSqu ? 1 : 0);
     usbStick.setButton (1, data & psxX ? 1 : 0);
-    if (data & psxO || digitalRead(pedalPin) == 0) {
-        usbStick.setButton(2, 1);
-    }
-    else {
-        usbStick.setButton(2, 0);
-    }
+    usbStick.setButton (2, data & psxO ? 1 : 0);
     usbStick.setButton (3, data & psxTri ? 1 : 0);
     usbStick.setButton (4, data & psxL1 ? 1 : 0);
     usbStick.setButton (5, data & psxR1 ? 1 : 0);
@@ -151,4 +141,4 @@ void loop () {
     usbStick.sendState ();
     
   }
-} 
+}
